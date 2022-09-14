@@ -41,13 +41,22 @@ export default class FullPageScroll {
 
   onUrlHashChanged() {
     const newIndex = Array.from(this.screenElements).findIndex((screen) => location.hash.slice(1) === screen.id);
+    const oldIndex = this.activeScreen;
     this.activeScreen = (newIndex < 0) ? 0 : newIndex;
-    this.changePageDisplay();
+    this.changePageDisplay(oldIndex);
   }
 
-  changePageDisplay() {
-    this.changeVisibilityDisplay();
+  changePageDisplay(oldIndex) {
     this.changeActiveMenuItem();
+    if ((this.activeScreen === 2) && (oldIndex === 1)) {
+      this.screenElements[1].classList.add(`screen--bkg-fill`);
+      setTimeout(() => {
+        this.changeVisibilityDisplay();
+        this.screenElements[1].classList.remove(`screen--bkg-fill`);
+      }, 1000);
+    } else {
+      this.changeVisibilityDisplay();
+    }
     this.emitChangeDisplayEvent();
   }
 
